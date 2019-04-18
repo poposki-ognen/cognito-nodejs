@@ -1,0 +1,5 @@
+const HomeController = {
+    serveHome: function () {
+
+    }
+}
