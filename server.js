@@ -10,7 +10,7 @@ var HomeController = require('./controllers/home.controller');
 router.get('/user/:method', function (req, res) {
     var method = req.params.method;
     if(method === 'authenticate') {
-        res.setStatus(403);
+        res.status(403);
         res.send('Method not allowed')
     } else {
         return UAMController[method];
