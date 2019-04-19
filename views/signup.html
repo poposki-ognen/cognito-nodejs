@@ -5,6 +5,18 @@
     <title>Title</title>
 </head>
 <body>
-
+<div class="signup-holder">
+    <form action="/user/register" method="post">
+        <input type="email" name="email" placeholder="email">
+        <input type="password" name="password" placeholder="password">
+        <button type="submit">Register</button>
+    </form>
+    <a href="https://bi-ua-test.auth.eu-central-1.amazoncognito.com/oauth2/authorize?redirect_uri=https://google.com&response_type=token&client_id=1mhv695m2in34eqblp8hb2p4i5&identity_provider=Facebook&scope=email openid profile">
+        Sign up with Facebook
+    </a>
+    <a href="https://bi-ua-test.auth.eu-central-1.amazoncognito.com/login?redirect_uri=https://google.com&response_type=token&client_id=1mhv695m2in34eqblp8hb2p4i5">
+        Sign up with Google
+    </a>
+</div>
 </body>
 </html>

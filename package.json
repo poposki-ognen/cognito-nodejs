@@ -8,10 +8,15 @@
     "aws-sdk": "^2.439.0",
     "express": "^4.16.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "amazon-cognito-identity-js": "^3.0.11",
+    "body-parser": "^1.18.3",
+    "node-fetch": "^2.3.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm install && node server.js"
+    "start": "npm install && node server.js",
+    "server": "node server.js"
   },
   "author": "Ognen Poposki",
   "license": "ISC"

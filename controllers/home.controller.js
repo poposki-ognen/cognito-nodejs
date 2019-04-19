@@ -1,5 +1,7 @@
 const HomeController = {
-    serveHome: function () {
-
+    serveHome: function (req, res) {
+        res.sendFile('home.html', {root: 'views'});
     }
 }
+
+module.exports = HomeController;
