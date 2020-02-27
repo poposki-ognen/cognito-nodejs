@@ -25,55 +25,54 @@ router.post("/user/:method", function(req, res) {
 router.get("/", function(req, res) {
   HomeController.serveHome(req, res);
 });
-router.get("/post-authentication", async function(req, res) {
+router.get("/404", function(req, res) {
+    res.send("ERROR 404");
+  });
+  
+router.get("/post-authentication", function(req, res) {
   var code = req.query.code;
   console.log(code);
-  try {
-      axios.defaults.headers.post['Content-Type']='application/x-www-form-urlencoded';
-      axios.defaults.headers.post['Accepts']='*/*';
-   return axios.post("https://pouch-test.auth.eu-central-1.amazoncognito.com/oauth2/token", {
-    grant_type: "authorization_code",
-    code: code,
-    client_id: "gukhocq1nfqkdvuimfojf6nbb",
-    redirect_uri: "http://localhost:3000/post-authentication"
-   }).then(data => {
-       console.log(data);
-       return data;
-   })
-  } catch (e) {
-    console.log(e.response);
-    res.sendStatus(200);
-  }
-  res.sendStatus(200);
+  getToken(code)
+    .then(function(data) {
+      console.log(data.data);
+      var id_token = data.data.id_token;
+      var refresh_token = data.data.refresh_token;
+      res.status(200);
+      res.setHeader("Authorization", id_token);
+      res.setHeader("refresh_token", refresh_token);
+      res.redirect("/user/myaccount");
+    })
+    .catch(function(error) {
+      res.render("error");
+    });
 });
 
-router.get("/404", function(req, res) {
-  res.send("ERROR 404");
-});
-
-async function getToken(code) {
-  try {
-    let data = {
+function getToken(code) {
+  return new Promise((resolve, reject) => {
+    var headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "*/*"
+    };
+    var data = {
       grant_type: "authorization_code",
       code: code,
       client_id: "gukhocq1nfqkdvuimfojf6nbb",
       redirect_uri: "http://localhost:3000/post-authentication"
     };
-    console.log(qs.stringify(data));
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-type": "application/x-www-form-urlencoded",
-        Accept: "*/*"
-      },
-      data: qs.stringify(data),
-      url: "https://pouch-test.auth.eu-central-1.amazoncognito.com/oauth2/token"
-    };
-    return axios(options);
-  } catch (e) {
-    console.log(e.response);
-    return {};
-  }
+    axios
+      .post(
+        "https://pouch-test.auth.eu-central-1.amazoncognito.com/oauth2/token",
+        qs.stringify(data),
+        headers
+      )
+      .then(function(response) {
+        resolve(response);
+      })
+      .catch(function(error) {
+        console.log("break");
+        resolve(error);
+      });
+  });
 }
 
 module.exports = router;
