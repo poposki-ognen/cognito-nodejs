@@ -26,53 +26,49 @@ router.get("/", function(req, res) {
   HomeController.serveHome(req, res);
 });
 router.get("/404", function(req, res) {
-    res.send("ERROR 404");
-  });
-  
-router.get("/post-authentication", function(req, res) {
-  var code = req.query.code;
-  console.log(code);
-  getToken(code)
-    .then(function(data) {
-      console.log(data.data);
-      var id_token = data.data.id_token;
-      var refresh_token = data.data.refresh_token;
-      res.status(200);
-      res.setHeader("Authorization", id_token);
-      res.setHeader("refresh_token", refresh_token);
-      res.redirect("/user/myaccount");
-    })
-    .catch(function(error) {
-      res.render("error");
-    });
+  res.send("ERROR 404");
+});
+
+router.get("/post-authentication", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const data = await getToken(code);
+    const {
+      data: { id_token, refresh_token }
+    } = data;
+    res.status(200);
+    res.setHeader("Authorization", id_token);
+    res.setHeader("refresh_token", refresh_token);
+    res.redirect("/user/myaccount");
+  } catch (e) {
+    res.render(e);
+  }
 });
 
 function getToken(code) {
-  return new Promise((resolve, reject) => {
-    var headers = {
+  return new Promise(async (resolve, reject) => {
+    const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
       Accept: "*/*"
     };
-    var data = {
+    const data = {
       grant_type: "authorization_code",
       code: code,
-      client_id: "gukhocq1nfqkdvuimfojf6nbb",
+      client_id: "20nd7iea4it6cp8eiki4d0r2er",
       redirect_uri: "http://localhost:3000/post-authentication"
     };
-    axios
-      .post(
-        "https://pouch-test.auth.eu-central-1.amazoncognito.com/oauth2/token",
+    try {
+      console.log("okay");
+      const res = await axios.post(
+        "https://pouch-test.auth.eu-west-1.amazoncognito.com/oauth2/token",
         qs.stringify(data),
         headers
-      )
-      .then(function(response) {
-        resolve(response);
-      })
-      .catch(function(error) {
-        console.log("break");
-        resolve(error);
-      });
+      );
+      resolve(res);
+    } catch (e) {
+      console.log("break");
+      resolve(e);
+    }
   });
 }
-
 module.exports = router;

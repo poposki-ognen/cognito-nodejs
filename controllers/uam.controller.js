@@ -2,8 +2,8 @@ const AWS = require("aws-sdk");
 var cognito = require("amazon-cognito-identity-js-node");
 global.fetch = require("node-fetch");
 var poolData = {
-  UserPoolId: "eu-central-1_rw3G5TW7b",
-  ClientId: "gukhocq1nfqkdvuimfojf6nbb"
+  UserPoolId: "eu-west-1_tdeGCZUZK",
+  ClientId: "20nd7iea4it6cp8eiki4d0r2er"
 };
 var userPool = new cognito.CognitoUserPool(poolData);
 var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
